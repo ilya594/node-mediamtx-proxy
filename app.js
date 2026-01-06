@@ -23,7 +23,7 @@ app.get("/camera/status", async (_, res) => {
     res.json(await r.json());
 });
 
-app.get("tmpcreate", async (_, res) => {
+app.get("/tmpcreate", async (_, res) => {
     await fetch("http://mediamtx:8889/v3/paths/add/camera", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -32,5 +32,6 @@ app.get("tmpcreate", async (_, res) => {
             sourceOnDemand: false
         })
     });
+    res.send("something happened at least ...")
 });
 app.listen(process.env.PORT || 3000);
