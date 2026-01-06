@@ -24,7 +24,7 @@ app.get("/camera/status", async (_, res) => {
 });
 
 app.get("/tmpcreate", async (_, res) => {
-    await fetch("http://mediamtx:8889/v3/paths/add/camera", {
+    await fetch("http://srv-d5eisqlactks73c92jo0:8889/v3/paths/add/camera", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
