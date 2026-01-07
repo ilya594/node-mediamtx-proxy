@@ -1,37 +1,22 @@
-import express from "express";
-import fetch from "node-fetch";
+import express from 'express';
+import fetch from 'node-fetch';
 
 const app = express();
-app.use(express.json());
+const PORT = process.env.PORT || 10000;
+const MTX = process.env.MEDIAMTX_API;
 
-const API = "http://mediamtx:8889/v3";
-
-app.post("/camera/start", async (_, res) => {
-    const r = await fetch(`${API}/paths/add/camera`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            source: "rtsp://admin:dima_password_0@192.168.1.105:554/cam/realmonitor?channel=1&subtype=1",
-            sourceOnDemand: true
-        })
+app.get('/health', async (req, res) => {
+  try {
+    const r = await fetch(`${MTX}/v3/paths/list`, {
+      headers: { Accept: 'application/json' }
     });
-    res.json(await r.json());
+    const data = await r.json();
+    res.json({ mediamtx: 'ok', paths: data.items.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-app.get("/camera/status", async (_, res) => {
-    const r = await fetch(`${API}/paths/get/camera`);
-    res.json(await r.json());
+app.listen(PORT, () => {
+  console.log(`Node.js listening on ${PORT}`);
 });
-
-app.get("/tmpcreate", async (_, res) => {
-    await fetch("http://srv-d5eisqlactks73c92jo0:8889/v3/paths/add/camera", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            source: "rtsp://admin:dima_password_0@192.168.1.105:554/cam/realmonitor?channel=1&subtype=1",
-            sourceOnDemand: false
-        })
-    });
-    res.send("something happened at least ...")
-});
-app.listen(process.env.PORT || 3000);
